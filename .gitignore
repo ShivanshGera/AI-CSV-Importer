@@ -1,0 +1,22 @@
+# Node Modules
+**/node_modules
+
+# Environment files
+**/.env
+
+# Logs
+*.log
+
+# Build folders
+frontend/.next
+frontend/out
+frontend/build
+
+backend/uploads
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode
