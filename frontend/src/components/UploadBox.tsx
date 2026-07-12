@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react";
 import { Upload } from "lucide-react";
+import { TailSpin } from "react-loader-spinner";
+import { toast } from "sonner";
 import Papa from "papaparse";
 
 import { uploadCSV } from "@/services/upload.service";
@@ -58,38 +60,39 @@ export default function UploadBox({
 
       setCrmData(response.data);
 
+      toast.success(
+        `Successfully processed ${response.processedRecords} records`
+      );
     } catch (error) {
       console.error(error);
 
-      alert("Import failed");
+      toast.error("Import failed. Please try again.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <section className="mx-auto mt-10 w-full max-w-3xl rounded-2xl border-2 border-dashed border-gray-300 bg-white p-10 shadow-sm">
-
+    <section className="mx-auto mt-10 w-full max-w-3xl rounded-3xl border border-gray-200 bg-white p-10 shadow-xl">
       <div className="flex flex-col items-center">
+        <div className="rounded-full bg-blue-100 p-5">
+          <Upload size={70} className="text-blue-600" />
+        </div>
 
-        <Upload
-          size={60}
-          className="text-blue-600"
-        />
-
-        <h2 className="mt-4 text-2xl font-bold">
+        <h2 className="mt-6 text-3xl font-bold text-gray-800">
           Upload CSV File
         </h2>
 
-        <p className="mt-2 text-center text-gray-500">
-          Drag & Drop your CSV file here or click below to browse.
+        <p className="mt-3 max-w-md text-center leading-7 text-gray-500">
+          Upload your CSV file and let Gemini AI intelligently convert it into
+          GrowEasy CRM format.
         </p>
 
         <button
           onClick={handleButtonClick}
-          className="mt-6 rounded-lg bg-blue-600 px-6 py-3 text-white"
+          className="mt-8 rounded-xl bg-blue-600 px-8 py-3 font-medium text-white transition hover:bg-blue-700"
         >
-          Choose File
+          Choose CSV File
         </button>
 
         <input
@@ -102,24 +105,37 @@ export default function UploadBox({
 
         {selectedFile && (
           <>
-            <p className="mt-4 text-green-600">
-              {selectedFile.name}
-            </p>
+            <div className="mt-6 w-full max-w-md rounded-xl border border-green-200 bg-green-50 p-4">
+              <p className="font-semibold text-green-700">
+                📄 {selectedFile.name}
+              </p>
+
+              <p className="mt-1 text-sm text-green-600">
+                Ready for AI processing
+              </p>
+            </div>
 
             <button
               onClick={handleImport}
               disabled={loading}
-              className="mt-5 rounded-lg bg-green-600 px-6 py-3 text-white disabled:bg-gray-400"
+              className="mt-6 flex items-center gap-3 rounded-xl bg-green-600 px-8 py-3 font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-gray-400"
             >
-              {loading
-                ? "Importing..."
-                : "Import with AI"}
+              {loading ? (
+                <>
+                  <TailSpin
+                    height={22}
+                    width={22}
+                    color="#ffffff"
+                  />
+                  Processing with Gemini...
+                </>
+              ) : (
+                <>🤖 Import with AI</>
+              )}
             </button>
           </>
         )}
-
       </div>
-
     </section>
   );
 }

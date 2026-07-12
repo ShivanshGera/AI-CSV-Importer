@@ -7,58 +7,76 @@ interface ResultTableProps {
 export default function ResultTable({
   data,
 }: ResultTableProps) {
-
   if (!data.length) return null;
 
   const headers = Object.keys(data[0]);
 
   return (
-    <div className="mx-auto mt-10 max-w-7xl overflow-auto rounded-xl bg-white shadow">
+    <section className="mx-auto mt-10 max-w-7xl rounded-2xl bg-white shadow-lg">
 
-      <h2 className="p-4 text-2xl font-bold">
-        AI Output
-      </h2>
+      <div className="flex items-center justify-between border-b p-6">
 
-      <table className="min-w-full">
+        <div>
 
-        <thead>
+          <h2 className="text-2xl font-bold text-gray-800">
+            AI Converted CRM Data
+          </h2>
 
-          <tr>
+          <p className="mt-1 text-sm text-gray-500">
+            Successfully processed {data.length} records
+          </p>
 
-            {headers.map((header) => (
-              <th
-                key={header}
-                className="border bg-gray-100 px-3 py-2 text-left"
-              >
-                {header}
-              </th>
-            ))}
+        </div>
 
-          </tr>
+      </div>
 
-        </thead>
+      <div className="max-h-[500px] overflow-auto">
 
-        <tbody>
+        <table className="min-w-full text-sm">
 
-          {data.map((row, index) => (
-            <tr key={index}>
+          <thead className="sticky top-0 bg-gray-100">
+
+            <tr>
 
               {headers.map((header) => (
-                <td
+                <th
                   key={header}
-                  className="border px-3 py-2"
+                  className="border-b px-5 py-3 text-left font-semibold text-gray-700"
                 >
-                  {row[header as keyof CRMRecord]}
-                </td>
+                  {header}
+                </th>
               ))}
 
             </tr>
-          ))}
 
-        </tbody>
+          </thead>
 
-      </table>
+          <tbody>
 
-    </div>
+            {data.map((row, index) => (
+              <tr
+                key={index}
+                className="transition hover:bg-gray-50 odd:bg-white even:bg-gray-50"
+              >
+
+                {headers.map((header) => (
+                  <td
+                    key={header}
+                    className="border-b px-5 py-3"
+                  >
+                    {row[header as keyof CRMRecord] || "—"}
+                  </td>
+                ))}
+
+              </tr>
+            ))}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
   );
 }

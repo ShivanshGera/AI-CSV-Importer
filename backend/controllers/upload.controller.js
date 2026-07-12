@@ -26,15 +26,25 @@ async function uploadCSV(req, res) {
       });
     }
 
-    const aiResponse = await extractCRMData(parsed.data);
+    // Process CSV in batches
+    const batchSize = 20;
+    const crmData = [];
 
-    // Remove markdown if Gemini accidentally returns it
-    const cleanedResponse = aiResponse
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
+    for (let i = 0; i < parsed.data.length; i += batchSize) {
+      const batch = parsed.data.slice(i, i + batchSize);
 
-    const crmData = JSON.parse(cleanedResponse);
+      const aiResponse = await extractCRMData(batch);
+
+      // Remove markdown if Gemini accidentally returns it
+      const cleanedResponse = aiResponse
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+      const parsedBatch = JSON.parse(cleanedResponse);
+
+      crmData.push(...parsedBatch);
+    }
 
     return res.status(200).json({
       success: true,
