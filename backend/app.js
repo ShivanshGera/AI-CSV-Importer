@@ -1,14 +1,15 @@
 const express = require("express");
 const cors = require("cors");
+
 require("dotenv").config();
+
+const uploadRoutes = require("./routes/upload.routes");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Backend is running 🚀");
-});
+app.use("/api/upload", uploadRoutes);
 
 module.exports = app;
